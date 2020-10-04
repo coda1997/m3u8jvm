@@ -12,7 +12,8 @@ repositories {
 }
 dependencies {
     testImplementation(kotlin("test-junit"))
-    implementation("io.ktor:ktor-client-core:1.4.0")
+    implementation("io.ktor:ktor-client-cio:1.4.0")
+
 }
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "11"
