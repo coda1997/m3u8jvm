@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.4.10"
     application
+
 }
 group = "me.da"
 version = "1.0-SNAPSHOT"
@@ -20,4 +21,13 @@ tasks.withType<KotlinCompile>() {
 }
 application {
     mainClassName = "MainKt"
+}
+
+tasks.jar{
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+//    configurations["compileClasspath"].forEach { file: File ->
+//        from(zipTree(file.absoluteFile))
+//    }
 }
