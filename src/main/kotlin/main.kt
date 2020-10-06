@@ -19,11 +19,10 @@ fun main(args: Array<String>) {
             }
         }
     }
-    println("config info: url = $url, output path = $outputPath, number = $c")
-    val job = m3u8download(url, outputPath, c)
-    while (!job.isCompleted){
-
+    print("start.\nconfig info: url = $url, output path = $outputPath, number = $c")
+    runBlocking {
+        m3u8download(url, outputPath, c).join()
     }
-    println("done")
+    println("done !")
 
 }

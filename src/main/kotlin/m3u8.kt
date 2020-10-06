@@ -26,25 +26,34 @@ fun m3u8download(url: String, outputPath: String, concurNum: Int = 50) = GlobalS
     val file = File("$outputPath/content.ts").outputStream()
     val channel = Channel<Deferred<ByteArray>>(capacity = concurNum)
     //1st, to get all links
+    val links = contents.filter { !(it.startsWith('#') || it.isEmpty()) }
     async {
-        contents.filter { !(it.startsWith('#') || it.isEmpty()) }.forEach {
+        links.forEach {
             channel.send(async {
-                client.get<ByteArray>{
+                client.get<ByteArray> {
                     url("$currentPath/$it")
                 }
             })
         }
         channel.close()
     }
+    if(links.isEmpty()){
+        error("no video links")
+        return@launch
+    }
     var cc = 0
+    var value = 0.0
     while (true){
         val item = channel.receive().await()
-        println(cc++)
+        cc++
+        value = cc.toDouble()/links.size
+        print("\rdownloading... ${"%.2f".format(value)}%")
         file.write(item)
         if(channel.isClosedForReceive){
             break
         }
     }
+    println()
     file.close()
     client.close()
 }
