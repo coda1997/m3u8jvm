@@ -42,16 +42,13 @@ fun m3u8download(url: String, outputPath: String, concurNum: Int = 50) = GlobalS
         return@launch
     }
     var cc = 0
-    var value = 0.0
-    while (true){
+    var value: Double
+    while (!channel.isClosedForReceive){
         val item = channel.receive().await()
         cc++
-        value = cc.toDouble()/links.size
+        value = cc.toDouble()/links.size*100
         print("\rdownloading... ${"%.2f".format(value)}%")
         file.write(item)
-        if(channel.isClosedForReceive){
-            break
-        }
     }
     println()
     file.close()
